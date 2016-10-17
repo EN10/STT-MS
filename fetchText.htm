@@ -12,11 +12,11 @@
         }
 
         function getKey() {
-            return "API KEY HERE!";
+            return "eabdd9d57c334da2b7a06791157d2dd5";
         }
 
         function getLanguage() {
-            return "en-us";
+            return "en-GB";
         }
 
         function clearText() {
@@ -40,7 +40,7 @@
             request = new XMLHttpRequest();
             request.open(
                 'GET',
-                (mode == Microsoft.CognitiveServices.SpeechRecognition.SpeechRecognitionMode.shortPhrase) ? "whatstheweatherlike.wav" : "batman.wav",
+                (mode == Microsoft.CognitiveServices.SpeechRecognition.SpeechRecognitionMode.shortPhrase) ? "test.wav" : "batman.wav",
                 true);
             request.responseType = 'arraybuffer';
             request.onload = function () {
