@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script src="speech.1.0.0.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var client;
+        var request;
+
+        function getMode() {
+            return Microsoft.CognitiveServices.SpeechRecognition.SpeechRecognitionMode.shortPhrase;
+        }
+
+        function getKey() {
+            return "API KEY HERE!";
+        }
+
+        function getLanguage() {
+            return "en-us";
+        }
+
+        function clearText() {
+            document.getElementById("output").value = "";
+        }
+
+        function setText(text) {
+            document.getElementById("output").value += text;
+        }
+
+        function start() {
+            var mode = getMode();
+            
+            clearText();
+            
+            client = Microsoft.CognitiveServices.SpeechRecognition.SpeechRecognitionServiceFactory.createDataClient(
+                mode,
+                getLanguage(),
+                getKey());
+
+            request = new XMLHttpRequest();
+            request.open(
+                'GET',
+                (mode == Microsoft.CognitiveServices.SpeechRecognition.SpeechRecognitionMode.shortPhrase) ? "whatstheweatherlike.wav" : "batman.wav",
+                true);
+            request.responseType = 'arraybuffer';
+            request.onload = function () {
+                if (request.status !== 200) {
+                    setText("unable to receive audio file");
+                } else {
+                    client.sendAudio(request.response, request.response.length);
+                }
+            };
+
+            request.send();
+
+            client.onPartialResponseReceived = function (response) {
+                setText(response);
+            }
+
+            client.onFinalResponseReceived = function (response) {
+                setText(JSON.stringify(response));
+            }
+
+            client.onIntentReceived = function (response) {
+                setText(response);
+            };
+        }
+    </script>
+</head>
+<body style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+    <table width="100%">
+        <tr><td/><td><h1>Speech.JS</h1><h2>Microsoft Cognitive Services</h2></td></tr>
+        <tr>
+            <td />
+            <td><button onclick="start()">Start</button></td>
+        </tr>
+        <tr><td/>
+            <td>
+                <textarea id="output" style='width:400px;height:200px'></textarea>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
